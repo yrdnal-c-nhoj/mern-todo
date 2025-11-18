@@ -72,7 +72,7 @@ function App() {
     <div className="min-h-screen bg-blue-50 flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-xl bg-white shadow-lg rounded-xl p-6 sm:p-8">
         <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 mb-6 text-center">
-          Todo List
+          To-Do List
         </h1>
 
         {/* Add Todo */}
