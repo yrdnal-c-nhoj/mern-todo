@@ -8,7 +8,7 @@ function App() {
   const [error, setError] = useState("");
 
   // Set your backend base URL if needed
-  axios.defaults.baseURL = "http://localhost:5000";
+  axios.defaults.baseURL = "http://localhost:5001";
 
   // Fetch all todos
   const fetchTodos = async () => {
