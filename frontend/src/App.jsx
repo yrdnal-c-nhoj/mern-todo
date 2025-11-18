@@ -70,7 +70,7 @@ function App() {
 
   return (
     <div style={{ padding: "2rem", fontFamily: "Arial, sans-serif" }}>
-      <h1>Todo List</h1>
+      <h1>To do List</h1>
 
       {/* Add Todo */}
       <div style={{ marginBottom: "1rem" }}>
