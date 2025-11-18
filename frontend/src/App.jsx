@@ -69,59 +69,60 @@ function App() {
   };
 
   return (
-    <div style={{ padding: "2rem", fontFamily: "Arial, sans-serif" }}>
-      <h1>Todo List</h1>
+    <div className="min-h-screen bg-blue-50 flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-xl bg-white shadow-lg rounded-xl p-6 sm:p-8">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 mb-6 text-center">
+          Todo List
+        </h1>
 
-      {/* Add Todo */}
-      <div style={{ marginBottom: "1rem" }}>
-        <input
-          type="text"
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-          placeholder="Enter new todo"
-          style={{ marginRight: "0.5rem", padding: "0.5rem", width: "250px" }}
-        />
-        <button
-          onClick={handleAdd}
-          style={{ padding: "0.5rem 1rem", cursor: "pointer" }}
-        >
-          Add
-        </button>
-      </div>
-
-      {/* Loading/Error */}
-      {loading && <p>Loading todos...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {/* Todo List */}
-      {!loading && (!Array.isArray(todos) || todos.length === 0) ? (
-        <p>No todos yet!</p>
-      ) : (
-        todos.map((todo) => (
-          <div
-            key={todo._id}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "0.5rem",
-            }}
+        {/* Add Todo */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          <input
+            type="text"
+            value={newTodo}
+            onChange={(e) => setNewTodo(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+            placeholder="Enter new todo"
+            className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm sm:text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50"
+          />
+          <button
+            onClick={handleAdd}
+            className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm sm:text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-60"
           >
-            <p style={{ marginRight: "1rem" }}>{todo.text}</p>
-            <button
-              onClick={() => handleDelete(todo._id)}
-              style={{
-                padding: "0.25rem 0.5rem",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-            >
-              Delete
-            </button>
+            Add
+          </button>
+        </div>
+
+        {/* Loading/Error */}
+        {loading && (
+          <p className="text-sm text-slate-600 mb-3">Loading todos...</p>
+        )}
+        {error && (
+          <p className="text-sm text-red-600 mb-3">{error}</p>
+        )}
+
+        {/* Todo List */}
+        {!loading && (!Array.isArray(todos) || todos.length === 0) ? (
+          <p className="text-sm text-slate-500 text-center">No todos yet!</p>
+        ) : (
+          <div className="space-y-2">
+            {todos.map((todo) => (
+              <div
+                key={todo._id}
+                className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-3 py-2"
+              >
+                <p className="text-slate-800 break-words mr-3 flex-1">{todo.text}</p>
+                <button
+                  onClick={() => handleDelete(todo._id)}
+                  className="inline-flex items-center justify-center rounded-md border border-red-200 bg-red-50 px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-100"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
           </div>
-        ))
-      )}
+        )}
+      </div>
     </div>
   );
 }
