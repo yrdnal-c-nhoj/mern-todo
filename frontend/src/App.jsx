@@ -114,7 +114,7 @@ function App() {
                 <p className="text-slate-800 break-words mr-3 flex-1">{todo.text}</p>
                 <button
                   onClick={() => handleDelete(todo._id)}
-                  className="inline-flex items-center justify-center rounded-md border border-red-200 bg-red-50 px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-100"
+                  className="inline-flex items-center justify-center rounded-md border border-red-200 bg-red-50 px-2 py-1 text-xl font-medium text-red-600 hover:bg-red-100"
                 >
                   Delete
                 </button>
