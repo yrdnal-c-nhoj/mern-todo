@@ -103,18 +103,18 @@ function App() {
 
         {/* Todo List */}
         {!loading && (!Array.isArray(todos) || todos.length === 0) ? (
-          <p className="text-sm text-slate-500 text-center">No todos yet!</p>
+          <p className="text-4xl text-orange-500 text-center">No todos yet!</p>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-12">
             {todos.map((todo) => (
               <div
                 key={todo._id}
-                className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-3 py-2"
+                className="flex items-right justify-between rounded-lg border border-slate-200 bg-slate-50 px-3 py-2"
               >
                 <p className="text-slate-800 break-words mr-3 flex-1">{todo.text}</p>
                 <button
                   onClick={() => handleDelete(todo._id)}
-                  className="inline-flex items-center justify-center rounded-md border border-red-200 bg-red-50 px-2 py-1 text-xl font-medium text-red-600 hover:bg-red-100"
+                  className="inline-flex items-center justify-center border border-red-200 bg-red-50 px-9 py-1 text-xl font-medium text-red-600 hover:bg-red-900"
                 >
                   Delete
                 </button>
