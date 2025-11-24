@@ -86,7 +86,7 @@ function App() {
   // Uses blue background, white card with shadow
   return (
     <div className="min-h-screen bg-blue-500 flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-xl bg-white shadow-lg rounded-xl p-6 sm:p-8">
+      <div className="w-full max-w-xl bg-pink-500 shadow-lg rounded-xl p-6 sm:p-8">
         <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 mb-6 text-center">
           My To-Do List
         </h1>
