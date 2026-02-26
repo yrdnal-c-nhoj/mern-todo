@@ -20,8 +20,8 @@ function App() {
       const res = await axios.get("/api/todos");
       setTodos(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
-      console.error(err);
-      setError("Failed to fetch todos");
+      console.error("Fetch error:", err);
+      setError(`Failed to fetch todos: ${err.response?.data?.error || err.message}`);
       setTodos([]);
     } finally {
       setLoading(false);

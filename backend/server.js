@@ -21,9 +21,18 @@ app.use(express.json());
 
 app.use("/api/todos", require("./routes/todoRoutes"));
 
+app.get("/health", (req, res) => {
+  res.json({ status: "Server is running", timestamp: new Date().toISOString() });
+});
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    app.listen(process.env.PORT || 5001);
+    console.log("Database connected successfully");
+    app.listen(process.env.PORT || 5001, () => {
+      console.log("Server running on port", process.env.PORT || 5001);
+    });
   })
-  .catch((err) => console.error(err));
+  .catch((err) => {
+    console.error("Database connection failed:", err);
+  });
