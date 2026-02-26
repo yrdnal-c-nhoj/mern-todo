@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-// ✅ Set this ONCE at module level, not inside the component
+// ✅ Set ONCE at module level
 axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 axios.defaults.withCredentials = false;
-
 
 function App() {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  axios.defaults.baseURL = import.meta.env.VITE_API_URL || (import.meta.env.PROD 
-    ? 'https://your-backend-url.com'
-    : 'http://localhost:5001');
-  
-  axios.defaults.withCredentials = false;
 
   const fetchTodos = async () => {
     setLoading(true);
