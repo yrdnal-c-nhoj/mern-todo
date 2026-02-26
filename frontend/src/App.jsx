@@ -75,7 +75,7 @@ function App() {
     <div className="flex items-center justify-center min-h-screen px-4 py-8 bg-blue-50">
       <div className="w-full max-w-xl p-6 bg-white shadow-lg sm:p-8 rounded-xl">
         <h1 className="mb-6 text-2xl font-semibold text-center text-slate-900 sm:text-3xl">
-          To-Do List
+          To Do List
         </h1>
 
         <div className="flex flex-col gap-3 mb-6 sm:flex-row">
