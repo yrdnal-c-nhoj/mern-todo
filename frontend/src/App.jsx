@@ -7,12 +7,10 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Set your backend base URL
   axios.defaults.baseURL = import.meta.env.VITE_API_URL || (import.meta.env.PROD 
-    ? 'https://your-render-app.onrender.com'
+    ? 'https://your-backend-url.com'
     : 'http://localhost:5001');
 
-  // Fetch all todos
   const fetchTodos = async () => {
     setLoading(true);
     setError("");
@@ -32,11 +30,10 @@ function App() {
     fetchTodos();
   }, []);
 
-  // Add a new todo (optimistic UI update)
   const handleAdd = async () => {
     if (!newTodo.trim()) return;
 
-    const tempId = Date.now(); // temporary ID for UI
+    const tempId = Date.now();
     const newTodoObj = { _id: tempId, text: newTodo };
 
     setTodos((prev) => [...prev, newTodoObj]);
@@ -44,19 +41,16 @@ function App() {
 
     try {
       const res = await axios.post("/api/todos", { text: newTodo });
-      // Replace temp todo with real one from server
       setTodos((prev) =>
         prev.map((todo) => (todo._id === tempId ? res.data : todo))
       );
     } catch (err) {
       console.error(err);
       setError("Failed to add todo");
-      // Remove temporary todo if API fails
       setTodos((prev) => prev.filter((todo) => todo._id !== tempId));
     }
   };
 
-  // Delete a todo (optimistic UI update)
   const handleDelete = async (id) => {
     const originalTodos = [...todos];
     setTodos((prev) => prev.filter((todo) => todo._id !== id));
@@ -66,57 +60,54 @@ function App() {
     } catch (err) {
       console.error(err);
       setError("Failed to delete todo");
-      setTodos(originalTodos); // rollback if API fails
+      setTodos(originalTodos);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4 py-8 bg-blue-50">
-      <div className="w-full max-w-xl p-6 bg-white shadow-lg sm:p-8 rounded-xl">
-        <h1 className="mb-6 text-2xl font-semibold text-center text-slate-900 sm:text-3xl">
-          To-Do Liste
+    <div className="flex justify-center items-center bg-blue-50 px-4 py-8 min-h-screen">
+      <div className="bg-white shadow-lg p-6 sm:p-8 rounded-xl w-full max-w-xl">
+        <h1 className="mb-6 font-semibold text-slate-900 text-2xl sm:text-3xl text-center">
+          To-Do List
         </h1>
 
-        {/* Add Todo */}
-        <div className="flex flex-col gap-3 mb-6 sm:flex-row">
+        <div className="flex sm:flex-row flex-col gap-3 mb-6">
           <input
             type="text"
             value={newTodo}
             onChange={(e) => setNewTodo(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             placeholder="Enter new todo"
-            className="flex-1 px-3 py-2 text-sm border rounded-lg shadow-sm bg-slate-50 border-slate-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-base"
+            className="flex-1 bg-slate-50 shadow-sm px-3 py-2 border border-slate-300 focus:border-indigo-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm sm:text-base"
           />
           <button
             onClick={handleAdd}
-            className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-sm hover:bg-indigo-700 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-base"
+            className="inline-flex justify-center items-center bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 shadow-sm px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 font-medium text-white text-sm sm:text-base"
           >
             Add
           </button>
         </div>
 
-        {/* Loading/Error */}
         {loading && (
-          <p className="mb-3 text-sm text-slate-600">Loading todos...</p>
+          <p className="mb-3 text-slate-600 text-sm">Loading todos...</p>
         )}
         {error && (
-          <p className="mb-3 text-sm text-red-600">{error}</p>
+          <p className="mb-3 text-red-600 text-sm">{error}</p>
         )}
 
-        {/* Todo List */}
         {!loading && (!Array.isArray(todos) || todos.length === 0) ? (
-          <p className="text-sm text-center text-slate-500">No todos yet!</p>
+          <p className="text-slate-500 text-sm text-center">No todos yet!</p>
         ) : (
           <div className="space-y-2">
             {todos.map((todo) => (
               <div
                 key={todo._id}
-                className="flex items-center justify-between px-3 py-2 border rounded-lg bg-slate-50 border-slate-200"
+                className="flex justify-between items-center bg-slate-50 px-3 py-2 border border-slate-200 rounded-lg"
               >
-                <p className="flex-1 mr-3 break-words text-slate-800">{todo.text}</p>
+                <p className="flex-1 mr-3 text-slate-800 break-words">{todo.text}</p>
                 <button
                   onClick={() => handleDelete(todo._id)}
-                  className="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-red-600 border border-red-200 rounded-md bg-red-50 hover:bg-red-100"
+                  className="inline-flex justify-center items-center bg-red-50 hover:bg-red-100 px-2 py-1 border border-red-200 rounded-md font-medium text-red-600 text-xs"
                 >
                   Delete
                 </button>
