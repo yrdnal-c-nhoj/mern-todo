@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "preinstall": "rm -rf node_modules package-lock.json || true",
     "dev": "nodemon server.js",
     "start": "node server.js",
     "build": "echo 'No build step required'",

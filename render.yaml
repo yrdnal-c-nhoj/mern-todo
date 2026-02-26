@@ -3,9 +3,8 @@ services:
     name: todo-backend
     env: node
     plan: free
-    rootDir: backend
-    buildCommand: "npm install --production=false"
-    startCommand: "npm start"
+    buildCommand: "cd backend && npm install --production=false && npm run build"
+    startCommand: "cd backend && npm start"
     envVars:
       - key: NODE_ENV
         value: production
