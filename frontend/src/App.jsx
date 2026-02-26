@@ -7,8 +7,10 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Set your backend base URL if needed
-  axios.defaults.baseURL = "http://localhost:5001";
+  // Set your backend base URL
+  axios.defaults.baseURL = import.meta.env.VITE_API_URL || (import.meta.env.PROD 
+    ? 'https://your-render-app.onrender.com'
+    : 'http://localhost:5001');
 
   // Fetch all todos
   const fetchTodos = async () => {
@@ -69,25 +71,25 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-blue-50 flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-xl bg-white shadow-lg rounded-xl p-6 sm:p-8">
-        <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 mb-6 text-center">
+    <div className="flex justify-center items-center bg-blue-50 px-4 py-8 min-h-screen">
+      <div className="bg-white shadow-lg p-6 sm:p-8 rounded-xl w-full max-w-xl">
+        <h1 className="mb-6 font-semibold text-slate-900 text-2xl sm:text-3xl text-center">
           To-Do List
         </h1>
 
         {/* Add Todo */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+        <div className="flex sm:flex-row flex-col gap-3 mb-6">
           <input
             type="text"
             value={newTodo}
             onChange={(e) => setNewTodo(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             placeholder="Enter new todo"
-            className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm sm:text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50"
+            className="flex-1 bg-slate-50 shadow-sm px-3 py-2 border border-slate-300 focus:border-indigo-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm sm:text-base"
           />
           <button
             onClick={handleAdd}
-            className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm sm:text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-60"
+            className="inline-flex justify-center items-center bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 shadow-sm px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 font-medium text-white text-sm sm:text-base"
           >
             Add
           </button>
@@ -95,26 +97,26 @@ function App() {
 
         {/* Loading/Error */}
         {loading && (
-          <p className="text-sm text-slate-600 mb-3">Loading todos...</p>
+          <p className="mb-3 text-slate-600 text-sm">Loading todos...</p>
         )}
         {error && (
-          <p className="text-sm text-red-600 mb-3">{error}</p>
+          <p className="mb-3 text-red-600 text-sm">{error}</p>
         )}
 
         {/* Todo List */}
         {!loading && (!Array.isArray(todos) || todos.length === 0) ? (
-          <p className="text-sm text-slate-500 text-center">No todos yet!</p>
+          <p className="text-slate-500 text-sm text-center">No todos yet!</p>
         ) : (
           <div className="space-y-2">
             {todos.map((todo) => (
               <div
                 key={todo._id}
-                className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-3 py-2"
+                className="flex justify-between items-center bg-slate-50 px-3 py-2 border border-slate-200 rounded-lg"
               >
-                <p className="text-slate-800 break-words mr-3 flex-1">{todo.text}</p>
+                <p className="flex-1 mr-3 text-slate-800 break-words">{todo.text}</p>
                 <button
                   onClick={() => handleDelete(todo._id)}
-                  className="inline-flex items-center justify-center rounded-md border border-red-200 bg-red-50 px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-100"
+                  className="inline-flex justify-center items-center bg-red-50 hover:bg-red-100 px-2 py-1 border border-red-200 rounded-md font-medium text-red-600 text-xs"
                 >
                   Delete
                 </button>
