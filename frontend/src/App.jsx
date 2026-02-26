@@ -84,7 +84,7 @@ function App() {
             value={newTodo}
             onChange={(e) => setNewTodo(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-            placeholder="Enter new todo"
+            placeholder="Enter a new todo"
             className="flex-1 px-3 py-2 text-sm border rounded-lg shadow-sm bg-slate-50 border-slate-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-base"
           />
           <button
