@@ -10,6 +10,8 @@ function App() {
   axios.defaults.baseURL = import.meta.env.VITE_API_URL || (import.meta.env.PROD 
     ? 'https://your-backend-url.com'
     : 'http://localhost:5001');
+  
+  axios.defaults.withCredentials = false;
 
   const fetchTodos = async () => {
     setLoading(true);
