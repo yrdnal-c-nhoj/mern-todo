@@ -6,7 +6,18 @@ const cors = require("cors");
 const app = express();
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin;
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'https://your-app-name.vercel.app'
+  ];
+  
+  if (process.env.NODE_ENV === 'production') {
+    res.header('Access-Control-Allow-Origin', allowedOrigins.includes(origin) ? origin : 'https://your-app-name.vercel.app');
+  } else {
+    res.header('Access-Control-Allow-Origin', '*');
+  }
+  
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', '*');
   res.header('Access-Control-Allow-Credentials', 'false');
