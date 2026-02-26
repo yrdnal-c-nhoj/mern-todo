@@ -12,11 +12,11 @@ app.use((req, res, next) => {
   const origin = req.headers.origin;
   const allowedOrigins = [
     'http://localhost:5173',
-    'https://your-app-name.vercel.app'
+    'https://your-frontend-url.com'
   ];
   
   if (process.env.NODE_ENV === 'production') {
-    res.header('Access-Control-Allow-Origin', allowedOrigins.includes(origin) ? origin : 'https://your-app-name.vercel.app');
+    res.header('Access-Control-Allow-Origin', allowedOrigins.includes(origin) ? origin : 'https://your-frontend-url.com');
   } else {
     res.header('Access-Control-Allow-Origin', '*');
   }
