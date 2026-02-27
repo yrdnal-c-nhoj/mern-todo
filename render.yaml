@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: mern-todo
+    env: node
+    plan: free
+    buildCommand: "cd backend && npm install"
+    startCommand: "cd backend && npm start"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        value: mongodb+srv://cubistheart_db_user:TLAGHqUW3ZacmSzW@chlclusterfun0.kkwdfs4.mongodb.net/mye?retryWrites=true&w=majority
+    healthCheckPath: /health
