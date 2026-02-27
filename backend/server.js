@@ -11,19 +11,19 @@ app.use((req, res, next) => {
   const origin = req.headers.origin;
   const allowedOrigins = [
     'http://localhost:5173',
-    process.env.FRONTEND_URL
-  ].filter(Boolean);
-
+    'https://mern-todo-gules.vercel.app'
+  ];
+  
   if (process.env.NODE_ENV === 'production') {
-    res.header('Access-Control-Allow-Origin', allowedOrigins.includes(origin) ? origin : process.env.FRONTEND_URL);
+    res.header('Access-Control-Allow-Origin', allowedOrigins.includes(origin) ? origin : 'https://mern-todo-gules.vercel.app');
   } else {
     res.header('Access-Control-Allow-Origin', '*');
   }
-
+  
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', '*');
   res.header('Access-Control-Allow-Credentials', 'false');
-
+  
   if (req.method === 'OPTIONS') {
     res.sendStatus(200);
   } else {
