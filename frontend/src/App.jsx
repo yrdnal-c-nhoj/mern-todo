@@ -3,7 +3,7 @@ import axios from "axios";
 
 // ✅ Set ONCE at module level
 axios.defaults.baseURL = import.meta.env.VITE_API_URL || (import.meta.env.PROD 
-    ? 'https://mern-todo-b3fe.onrender.com'
+    ? 'https://nasapod-1.onrender.com'
     : 'http://localhost:5001');
   
 axios.defaults.withCredentials = false;
