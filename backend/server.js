@@ -13,7 +13,8 @@ app.use((req, res, next) => {
     'http://localhost:5173',
     'https://mern-todo-gules.vercel.app',
     'https://mern-todo-git-main-johns-projects-75897040.vercel.app',
-    'https://mern-todo-mzvawp5in-johns-projects-75897040.vercel.app'
+    'https://mern-todo-mzvawp5in-johns-projects-75897040.vercel.app',
+    'https://mern-todo-mkjxtubqo-johns-projects-75897040.vercel.app'
   ];
   
   if (process.env.NODE_ENV === 'production') {
