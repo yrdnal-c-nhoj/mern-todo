@@ -39,17 +39,25 @@ app.use(express.json());
 app.use("/api/todos", require("./routes/todoRoutes"));
 
 app.get("/health", (req, res) => {
-  res.json({ status: "Server is running", timestamp: new Date().toISOString() });
+  res.json({ status: "Server is running", env: process.env.NODE_ENV });
+});
+
+app.get("/", (req, res) => {
+  res.json({ message: "MERN Todo API is running", endpoints: { health: "/health", todos: "/api/todos" } });
 });
 
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("Database connected successfully");
-    app.listen(process.env.PORT || 10000, () => {
-      console.log("Server running on port", process.env.PORT || 10000);
+    console.log("✅ Database connected successfully to:", process.env.MONGO_URI);
+    const port = process.env.PORT || 10000;
+    app.listen(port, () => {
+      console.log("🚀 Server running on port", port);
+      console.log("📡 Health check: https://mern-todo-b3fe.onrender.com/health");
     });
   })
   .catch((err) => {
-    console.error("Database connection failed:", err);
+    console.error("❌ Database connection failed:", err.message);
+    console.error("Full error:", err);
+    process.exit(1);
   });
