@@ -1,7 +1,17 @@
+/**
+ * Security middleware for the MERN Todo application
+ * Implements comprehensive security measures including CSP, HSTS, XSS protection, and rate limiting
+ */
+
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
-// Security headers
+/**
+ * Configures security headers using Helmet.js
+ * - Content Security Policy (CSP) to prevent XSS attacks
+ * - HTTP Strict Transport Security (HSTS) for HTTPS enforcement
+ * - Additional security headers for browser protection
+ */
 const securityHeaders = helmet({
   contentSecurityPolicy: {
     directives: {
@@ -20,7 +30,11 @@ const securityHeaders = helmet({
   }
 });
 
-// XSS protection middleware
+/**
+ * Custom XSS protection middleware
+ * Sanitizes request body data by removing script tags and potentially malicious content
+ * Works as an additional layer of protection beyond CSP
+ */
 const xssProtection = (req, res, next) => {
   if (req.body) {
     Object.keys(req.body).forEach(key => {
@@ -32,7 +46,11 @@ const xssProtection = (req, res, next) => {
   next();
 };
 
-// Global rate limiter
+/**
+ * Global rate limiting middleware
+ * Prevents brute force attacks and API abuse
+ * Limits requests to 1000 per IP per 15-minute window
+ */
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 1000, // Limit each IP to 1000 requests per windowMs

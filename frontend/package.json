@@ -1,13 +1,30 @@
 {
-  "name": "frontend",
+  "name": "mern-todo-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Professional todo application frontend built with React, Vite, and Tailwind CSS",
   "type": "module",
+  "keywords": [
+    "react",
+    "vite",
+    "tailwindcss",
+    "todo",
+    "mern",
+    "frontend",
+    "responsive"
+  ],
+  "author": "John Anderson",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yrdnal-c-nhoj/mern-todo.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "lint": "eslint . --fix",
+    "preview": "vite preview",
+    "format": "eslint . --fix"
   },
   "dependencies": {
     "axios": "^1.13.2",

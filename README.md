@@ -1,5 +1,11 @@
 # John's MERN Todo List Application
 
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
+[![React Version](https://img.shields.io/badge/react-19.2.0-blue)](https://reactjs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-4.4+-green)](https://www.mongodb.com/)
+[![Security](https://img.shields.io/badge/security-OWASP%20compliant-brightgreen)](https://owasp.org/)
+
 A professional, full-stack todo application built with the MERN stack (MongoDB, Express, React, Node.js). This application demonstrates enterprise-level security practices, responsive UI development, and production-ready deployment patterns.
 
 ## 🚀 Features

@@ -14,9 +14,9 @@ lerna-debug.log*
 .env.production.local
 
 # Build outputs
-/dist/
-/build/
-/coverage/
+dist/
+build/
+coverage/
 
 # Runtime data
 pids/
