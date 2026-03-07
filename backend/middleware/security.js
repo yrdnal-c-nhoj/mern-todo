@@ -1,6 +1,4 @@
 const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
-const xss = require('xss');
 const rateLimit = require('express-rate-limit');
 
 // Security headers
@@ -12,7 +10,7 @@ const securityHeaders = helmet({
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
       scriptSrc: ["'self'"],
-      connectSrc: ["'self'", "https://mern-todo-gules.vercel.app", "https://nasapod-1.onrender.com"],
+      connectSrc: ["'self'", "http://localhost:5173", "https://mern-todo-gules.vercel.app", "https://nasapod-1.onrender.com"],
     },
   },
   hsts: {
@@ -22,15 +20,12 @@ const securityHeaders = helmet({
   }
 });
 
-// MongoDB sanitization
-const sanitizeMongo = mongoSanitize();
-
 // XSS protection middleware
 const xssProtection = (req, res, next) => {
   if (req.body) {
     Object.keys(req.body).forEach(key => {
       if (typeof req.body[key] === 'string') {
-        req.body[key] = xss(req.body[key]);
+        req.body[key] = req.body[key].replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
       }
     });
   }
@@ -50,7 +45,6 @@ const globalLimiter = rateLimit({
 
 module.exports = {
   securityHeaders,
-  sanitizeMongo,
   xssProtection,
   globalLimiter
 };

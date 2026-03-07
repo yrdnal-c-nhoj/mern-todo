@@ -5,13 +5,12 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const { securityHeaders, sanitizeMongo, xssProtection, globalLimiter } = require("./middleware/security");
+const { securityHeaders, xssProtection, globalLimiter } = require("./middleware/security");
 
 const app = express();
 
 // Security middleware
 app.use(securityHeaders);
-app.use(sanitizeMongo);
 app.use(xssProtection);
 app.use(globalLimiter);
 
@@ -72,7 +71,7 @@ app.get("/", (req, res) => {
 });
 
 // 404 handler
-app.use('*', (req, res) => {
+app.use((req, res) => {
   res.status(404).json({
     success: false,
     error: 'Route not found',
