@@ -118,13 +118,13 @@ function App() {
   return (
     <div className="page-container gradient-bg">
       <div className="content-container">
-        <div className="w-full max-w-lg mx-auto card">
+        <div className="mx-auto w-full max-w-lg card">
           {/* Header */}
           <div className="card-header">
-            <h1 className="text-3xl text-center text-display text-slate-800 sm:text-4xl">
+            <h1 className="text-display text-slate-800 text-3xl sm:text-4xl text-center">
               John's Todo List
             </h1>
-            <div className="flex items-center justify-center gap-2.5 mt-3 text-sm">
+            <div className="flex justify-center items-center gap-2.5 mt-3 text-sm">
               <div
                 className={`w-3 h-3 rounded-full ring-2 ring-offset-2 transition-all duration-300 ${
                   isOnline
@@ -143,8 +143,8 @@ function App() {
           </div>
 
           {/* Input + Button */}
-          <div className="p-6 border-b border-slate-100">
-            <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="p-6 border-slate-100 border-b">
+            <div className="flex sm:flex-row flex-col gap-3">
               <input
                 type="text"
                 value={newTodo}
@@ -153,12 +153,12 @@ function App() {
                 placeholder="What needs to be done?"
                 maxLength={200}
                 disabled={!isOnline || loading}
-                className="flex-1 form-input"
+                className="flex-1 bg-slate-50 disabled:opacity-60 shadow-sm px-4 py-3 border border-slate-200 focus:border-indigo-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-800 transition-all placeholder-slate-400"
               />
               <button
                 onClick={handleAdd}
                 disabled={!isOnline || loading || !newTodo.trim()}
-                className="form-button min-w-[100px]"
+                className="flex justify-center items-center gap-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-50 shadow-md hover:shadow-lg px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:ring-offset-2 min-w-[100px] font-medium text-white text-xs transition-all duration-200 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <span className="animate-pulse">ADDING…</span>
@@ -171,18 +171,18 @@ function App() {
 
           {/* Messages */}
           {loading && (
-            <div className="flex items-center justify-center gap-2 p-4 mx-6 mt-4 alert-info">
+            <div className="flex justify-center items-center gap-2 mx-6 mt-4 p-4 alert-info">
               <span className="loading-spinner" />
               <span>Loading tasks...</span>
             </div>
           )}
 
           {error && (
-            <div className="flex items-center justify-between p-4 mx-6 mt-4 alert-error">
+            <div className="flex justify-between items-center mx-6 mt-4 p-4 alert-error">
               <span>{error}</span>
               <button
                 onClick={clearError}
-                className="px-2 text-xl font-bold leading-none text-red-500 hover:text-red-700"
+                className="px-2 font-bold text-red-500 hover:text-red-700 text-xl leading-none"
               >
                 ×
               </button>
@@ -192,10 +192,10 @@ function App() {
           {/* Todo List */}
           <div className="card-body">
             {todos.length === 0 && !loading ? (
-              <div className="py-12 text-center text-slate-400">
-                <div className="mb-4 text-6xl opacity-70">📋</div>
-                <p className="text-lg font-medium text-display">Your list is empty</p>
-                <p className="mt-1 text-sm text-label">Add a task above to get started</p>
+              <div className="py-12 text-slate-400 text-center">
+                <div className="opacity-70 mb-4 text-6xl">📋</div>
+                <p className="font-medium text-display text-lg">Your list is empty</p>
+                <p className="mt-1 text-label text-sm">Add a task above to get started</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -228,7 +228,7 @@ function App() {
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-5 text-xs text-center border-t bg-slate-50/70 border-slate-100 text-slate-500 text-label">
+          <div className="bg-slate-50/70 px-6 py-5 border-slate-100 border-t text-label text-slate-500 text-xs text-center">
             {todos.length} {todos.length === 1 ? 'task' : 'tasks'} • John's MERN To-Do App
           </div>
         </div>
