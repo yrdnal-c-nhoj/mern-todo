@@ -171,8 +171,9 @@ function App() {
 
           {/* Messages */}
           {loading && (
-            <div className="p-4 mx-6 mt-4 alert-info">
-              <span className="loading-spinner" /> Loading tasks...
+            <div className="flex items-center justify-center gap-2 p-4 mx-6 mt-4 alert-info">
+              <span className="loading-spinner" />
+              <span>Loading tasks...</span>
             </div>
           )}
 
@@ -214,7 +215,7 @@ function App() {
                       {todo.text}
                     </p>
                     <button
-                      onClick={() => handleDelete(_id)}
+                      onClick={() => handleDelete(todo._id)}
                       disabled={!isOnline}
                       className="btn btn-danger"
                     >
