@@ -1,0 +1,229 @@
+/* ===================================
+   EMPLOYEE DATABASE - GLOBAL STYLESHEET
+   =================================== */
+
+/* 
+ * FONT INFORMATION & TYPOGRAPHY SYSTEM
+ * ====================================
+ * 
+ * This project uses a mixed typography system:
+ * 
+ * 1. DISPLAY FONT - Georgia (for headings and content)
+ *    - Classic, elegant serif font
+ *    - Used for: Page titles, section headers, content text
+ *    - Tailwind class: font-display
+ * 
+ * 2. LABEL FONT - Roboto Slab (for buttons, labels, form elements)
+ *    - Modern, sturdy serif font
+ *    - Used for: Buttons, form labels, small text, table cells
+ *    - Tailwind class: font-label
+ * 
+ * 3. NAVIGATION FONT - Roboto Slab (for navigation links)
+ *    - Same sturdy serif font for consistency
+ *    - Used for: Navigation links, menu items
+ *    - Tailwind class: font-navigation
+ * 
+ * FONT IMPORTS (from index.html):
+ * - Roboto Slab: https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500
+ * - Georgia: System serif font (no external import needed)
+ * 
+ */
+
+/* Base Tailwind imports */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom component classes using our typography system */
+@layer components {
+  /* Typography utilities */
+  .text-display {
+    @apply font-display;
+  }
+  
+  .text-label {
+    @apply font-label;
+  }
+  
+  .text-navigation {
+    @apply font-navigation;
+  }
+  
+  /* Form components */
+  .form-input {
+    @apply block focus:z-10 relative px-3 py-2 border border-gray-300 focus:border-indigo-500 rounded-md focus:outline-none focus:ring-indigo-500 w-full font-label text-gray-900 sm:text-sm appearance-none placeholder-gray-500;
+  }
+  
+  .form-label {
+    @apply block font-label font-medium text-gray-700 text-sm;
+  }
+  
+  .form-button {
+    @apply relative flex justify-center bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 px-4 py-2 border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 w-full font-label font-medium text-white text-sm disabled:cursor-not-allowed;
+  }
+  
+  .form-button-secondary {
+    @apply relative flex justify-center bg-white hover:bg-gray-50 disabled:opacity-50 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 w-full font-label font-medium text-gray-700 text-sm disabled:cursor-not-allowed;
+  }
+  
+  /* Navigation components */
+  .nav-link {
+    @apply inline-flex justify-center items-center bg-gray-100 hover:bg-gray-200 disabled:opacity-50 px-3 border border-gray-300 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 h-9 font-navigation font-medium text-sm whitespace-nowrap transition-colors disabled:pointer-events-none;
+  }
+  
+  /* Card components */
+  .card {
+    @apply bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden;
+  }
+  
+  .card-header {
+    @apply bg-gray-50 px-6 py-4 border-gray-200 border-b;
+  }
+  
+  .card-body {
+    @apply px-6 py-4;
+  }
+  
+  /* Table components */
+  .table-container {
+    @apply border rounded-lg overflow-hidden;
+  }
+  
+  .table {
+    @apply w-full text-sm caption-bottom;
+  }
+  
+  .table-header {
+    @apply [&_tr]:border-b;
+  }
+  
+  .table-header-cell {
+    @apply h-12 px-4 text-left align-middle font-medium text-gray-600 [&:has([role=checkbox])]:pr-0 font-label;
+  }
+  
+  .table-header-cell-sortable {
+    @apply h-12 px-4 text-left align-middle font-medium text-gray-600 [&:has([role=checkbox])]:pr-0 cursor-pointer hover:bg-gray-50 transition-colors font-label;
+  }
+  
+  .table-body {
+    @apply [&_tr:last-child]:border-0;
+  }
+  
+  .table-row {
+    @apply hover:bg-gray-50 border-b transition-colors;
+  }
+  
+  .table-cell {
+    @apply p-4 align-middle [&:has([role=checkbox])]:pr-0 font-label;
+  }
+  
+  /* Alert components */
+  .alert-error {
+    @apply bg-red-50 px-4 py-3 border border-red-200 rounded-md font-label text-red-600;
+  }
+  
+  .alert-success {
+    @apply bg-green-50 px-4 py-3 border border-green-200 rounded-md font-label text-green-600;
+  }
+  
+  .alert-info {
+    @apply bg-blue-50 px-4 py-3 border border-blue-200 rounded-md font-label text-blue-600;
+  }
+  
+  /* Button components */
+  .btn {
+    @apply inline-flex justify-center items-center disabled:opacity-50 px-3 border border-gray-300 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 h-9 font-medium text-sm whitespace-nowrap transition-colors disabled:pointer-events-none;
+  }
+  
+  .btn-primary {
+    @apply bg-gray-50 hover:bg-blue-200 font-label text-blue-700 hover:text-orange-800;
+  }
+  
+  .btn-secondary {
+    @apply bg-white hover:bg-slate-100 font-label text-gray-700;
+  }
+  
+  .btn-danger {
+    @apply bg-red-50 hover:bg-red-100 font-label text-red-700 hover:text-red-800;
+  }
+  
+  /* Layout components */
+  .page-container {
+    @apply bg-gray-50 min-h-screen;
+  }
+  
+  .content-container {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl;
+  }
+  
+  .form-container {
+    @apply space-y-8 w-full max-w-md;
+  }
+  
+  /* Loading states */
+  .loading-spinner {
+    @apply border-gray-900 border-b-2 rounded-full w-4 h-4 animate-spin;
+  }
+  
+  /* Text utilities */
+  .text-uppercase {
+    @apply uppercase;
+  }
+  
+  .text-capitalize {
+    @apply capitalize;
+  }
+  
+  /* Spacing utilities */
+  .section-spacing {
+    @apply py-12;
+  }
+  
+  .component-spacing {
+    @apply mb-8;
+  }
+}
+
+/* Base layer customizations */
+@layer base {
+  /* Ensure consistent font rendering */
+  html {
+    font-family: theme('fontFamily.body'), system-ui, sans-serif;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Focus styles */
+  *:focus {
+    outline: 2px solid theme('colors.indigo.500');
+    outline-offset: 2px;
+  }
+  
+  /* Remove default focus for mouse users */
+  *:focus:not(:focus-visible) {
+    outline: none;
+  }
+  
+  *:focus-visible {
+    outline: 2px solid theme('colors.indigo.500');
+    outline-offset: 2px;
+  }
+}
+
+/* Utility classes for specific use cases */
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .glass-effect {
+    @apply bg-white/80 backdrop-blur-sm border border-white/20;
+  }
+  
+  .gradient-bg {
+    background: linear-gradient(135deg, theme('colors.indigo.50') 0%, theme('colors.blue.50') 100%);
+  }
+}

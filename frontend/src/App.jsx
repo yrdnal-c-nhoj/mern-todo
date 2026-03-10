@@ -2,12 +2,11 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
 // Configure axios defaults
-axios.defaults.baseURL = import.meta.env.VITE_API_URL || (import.meta.env.PROD 
-    ? 'https://nasapod-1.onrender.com'
-    : 'http://localhost:5001');
-  
+axios.defaults.baseURL =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? 'https://nasapod-1.onrender.com' : 'http://localhost:5001');
 axios.defaults.withCredentials = false;
-axios.defaults.timeout = 10000; // 10 second timeout
+axios.defaults.timeout = 10000;
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -20,10 +19,8 @@ function App() {
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
-    
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-    
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
@@ -36,10 +33,8 @@ function App() {
       setError("You're offline. Please check your connection.");
       return;
     }
-
     setLoading(true);
     setError("");
-    
     try {
       const res = await axios.get("/api/todos");
       setTodos(Array.isArray(res.data.data) ? res.data.data : []);
@@ -60,17 +55,14 @@ function App() {
   // Add todo with validation
   const handleAdd = async () => {
     const trimmedTodo = newTodo.trim();
-    
     if (!trimmedTodo) {
       setError("Please enter a todo item");
       return;
     }
-    
     if (trimmedTodo.length > 200) {
       setError("Todo must be less than 200 characters");
       return;
     }
-
     if (!isOnline) {
       setError("You're offline. Todo will be added when you're back online.");
       return;
@@ -93,7 +85,7 @@ function App() {
       console.error(err);
       const errorMessage = err.response?.data?.message || err.message;
       setError(`Failed to add todo: ${errorMessage}`);
-      // Rollback optimistic update
+      // Rollback
       setTodos((prev) => prev.filter((todo) => todo._id !== tempId));
     }
   };
@@ -101,13 +93,11 @@ function App() {
   // Delete todo with confirmation
   const handleDelete = async (id) => {
     if (!isOnline) {
-      setError("You're offline. Todo will be deleted when you're back online.");
+      setError("You're offline. Deletion will sync when online.");
       return;
     }
 
     const originalTodos = [...todos];
-    const todoToDelete = todos.find(todo => todo._id === id);
-    
     // Optimistic update
     setTodos((prev) => prev.filter((todo) => todo._id !== id));
     setError("");
@@ -118,101 +108,128 @@ function App() {
       console.error(err);
       const errorMessage = err.response?.data?.message || err.message;
       setError(`Failed to delete todo: ${errorMessage}`);
-      // Rollback optimistic update
+      // Rollback
       setTodos(originalTodos);
     }
   };
 
-  // Clear error message
   const clearError = () => setError("");
 
   return (
-    <div className="flex justify-center items-center bg-blue-50 px-4 py-8 min-h-screen">
-      <div className="bg-white shadow-lg p-6 sm:p-8 rounded-xl w-full max-w-xl">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="mb-2 font-semibold text-slate-900 text-2xl sm:text-3xl text-center">
-            John's Todo List
-          </h1>
-          <div className="flex justify-center items-center gap-2 text-sm">
-            <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-500' : 'bg-red-500'}`}></div>
-            <span className={isOnline ? 'text-green-600' : 'text-red-600'}>
-              {isOnline ? 'Online' : 'Offline'}
-            </span>
-          </div>
-        </div>
-
-        {/* Add Todo Form */}
-        <div className="flex sm:flex-row flex-col gap-3 mb-6">
-          <input
-            type="text"
-            value={newTodo}
-            onChange={(e) => setNewTodo(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-            placeholder="Enter a new todo"
-            maxLength={200}
-            className="flex-1 bg-slate-50 shadow-sm px-3 py-2 border border-slate-300 focus:border-indigo-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm sm:text-base"
-            disabled={!isOnline}
-          />
-          <button
-            onClick={handleAdd}
-            disabled={!isOnline || loading}
-            className="inline-flex justify-center items-center bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 shadow-sm px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 font-medium text-white text-sm sm:text-base disabled:cursor-not-allowed"
-          >
-            {loading ? 'Adding...' : 'Add'}
-          </button>
-        </div>
-
-        {/* Status Messages */}
-        {loading && (
-          <div className="bg-blue-50 mb-3 p-3 border border-blue-200 rounded-lg">
-            <p className="text-blue-600 text-sm">Loading todos...</p>
-          </div>
-        )}
-        
-        {error && (
-          <div className="flex justify-between items-center bg-red-50 mb-3 p-3 border border-red-200 rounded-lg">
-            <p className="text-red-600 text-sm">{error}</p>
-            <button
-              onClick={clearError}
-              className="text-red-400 hover:text-red-600 text-lg leading-none"
-            >
-              ×
-            </button>
-          </div>
-        )}
-
-        {/* Todo List */}
-        {!loading && (!Array.isArray(todos) || todos.length === 0) ? (
-          <div className="py-8 text-center">
-            <div className="mb-4 text-4xl">📝</div>
-            <p className="text-slate-500 text-sm">No todos yet! Add one above to get started.</p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {todos.map((todo) => (
+    <div className="page-container gradient-bg">
+      <div className="content-container">
+        <div className="w-full max-w-lg mx-auto card">
+          {/* Header */}
+          <div className="card-header">
+            <h1 className="text-3xl text-center text-display text-slate-800 sm:text-4xl">
+              John's Todo List
+            </h1>
+            <div className="flex items-center justify-center gap-2.5 mt-3 text-sm">
               <div
-                key={todo._id}
-                className="flex justify-between items-center bg-slate-50 hover:bg-slate-100 px-3 py-2 border border-slate-200 rounded-lg transition-colors"
+                className={`w-3 h-3 rounded-full ring-2 ring-offset-2 transition-all duration-300 ${
+                  isOnline
+                    ? 'bg-green-500 ring-green-200 animate-pulse'
+                    : 'bg-red-500 ring-red-200'
+                }`}
+              />
+              <span
+                className={`font-medium text-label ${
+                  isOnline ? 'text-green-700' : 'text-red-700'
+                }`}
               >
-                <p className="flex-1 mr-3 text-slate-800 break-words">{todo.text}</p>
-                <button
-                  onClick={() => handleDelete(todo._id)}
-                  disabled={!isOnline}
-                  className="inline-flex justify-center items-center bg-red-50 hover:bg-red-100 disabled:opacity-60 px-2 py-1 border border-red-200 rounded-md font-medium text-red-600 text-xs transition-colors disabled:cursor-not-allowed"
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
+                {isOnline ? 'Connected' : 'Offline'}
+              </span>
+            </div>
           </div>
-        )}
 
-        {/* Footer */}
-        <div className="mt-6 pt-4 border-slate-200 border-t">
-          <p className="text-slate-400 text-xs text-center">
-            {todos.length} {todos.length === 1 ? 'todo' : 'todos'} • Built with MERN stack
-          </p>
+          {/* Input + Button */}
+          <div className="p-6 border-b border-slate-100">
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <input
+                type="text"
+                value={newTodo}
+                onChange={(e) => setNewTodo(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+                placeholder="What needs to be done?"
+                maxLength={200}
+                disabled={!isOnline || loading}
+                className="flex-1 form-input"
+              />
+              <button
+                onClick={handleAdd}
+                disabled={!isOnline || loading || !newTodo.trim()}
+                className="form-button min-w-[100px]"
+              >
+                {loading ? (
+                  <span className="animate-pulse">ADDING…</span>
+                ) : (
+                  "ADD TASK"
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Messages */}
+          {loading && (
+            <div className="p-4 mx-6 mt-4 alert-info">
+              <span className="loading-spinner" /> Loading tasks...
+            </div>
+          )}
+
+          {error && (
+            <div className="flex items-center justify-between p-4 mx-6 mt-4 alert-error">
+              <span>{error}</span>
+              <button
+                onClick={clearError}
+                className="px-2 text-xl font-bold leading-none text-red-500 hover:text-red-700"
+              >
+                ×
+              </button>
+            </div>
+          )}
+
+          {/* Todo List */}
+          <div className="card-body">
+            {todos.length === 0 && !loading ? (
+              <div className="py-12 text-center text-slate-400">
+                <div className="mb-4 text-6xl opacity-70">📋</div>
+                <p className="text-lg font-medium text-display">Your list is empty</p>
+                <p className="mt-1 text-sm text-label">Add a task above to get started</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {todos.map((todo) => (
+                  <div
+                    key={todo._id}
+                    className={`group flex items-center justify-between px-4 py-3.5 rounded-xl border transition-all duration-200
+                      ${todo.completed
+                        ? 'bg-green-50/60 border-green-100'
+                        : 'bg-slate-50 hover:bg-slate-100 border-slate-200 hover:border-slate-300'}`}
+                  >
+                    <p
+                      className={`flex-1 mr-4 font-medium break-words text-label ${
+                        todo.completed ? 'line-through text-slate-500' : 'text-slate-800'
+                      }`}
+                    >
+                      {todo.text}
+                    </p>
+                    <button
+                      onClick={() => handleDelete(_id)}
+                      disabled={!isOnline}
+                      className="btn btn-danger"
+                    >
+                      DELETE
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div className="px-6 py-5 text-xs text-center border-t bg-slate-50/70 border-slate-100 text-slate-500 text-label">
+            {todos.length} {todos.length === 1 ? 'task' : 'tasks'} • John's MERN To-Do App
+          </div>
         </div>
       </div>
     </div>
