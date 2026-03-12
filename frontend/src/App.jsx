@@ -6,7 +6,7 @@ axios.defaults.baseURL =
   import.meta.env.VITE_API_URL ||
   (import.meta.env.PROD ? 'https://mern-todo-o78t.onrender.com' : 'http://localhost:5001');
 axios.defaults.withCredentials = false;
-axios.defaults.timeout = 10000;
+axios.defaults.timeout = 30000;
 
 function App() {
   const [todos, setTodos] = useState([]);
