@@ -4,7 +4,7 @@ import axios from "axios";
 // Configure axios defaults
 axios.defaults.baseURL =
   import.meta.env.VITE_API_URL ||
-  (import.meta.env.PROD ? 'https://your-backend-url.onrender.com' : 'http://localhost:5001');
+  (import.meta.env.PROD ? 'https://mern-todo-o78t.onrender.com' : 'http://localhost:5001');
 axios.defaults.withCredentials = false;
 axios.defaults.timeout = 10000;
 
