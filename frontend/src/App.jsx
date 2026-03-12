@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
-// Configure axios defaults
+// Configure axios defaults - force correct production URL
 const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-axios.defaults.baseURL = import.meta.env.VITE_API_URL || (isProduction ? 'https://mern-todo-o78t.onrender.com' : 'http://localhost:5001');
+axios.defaults.baseURL = isProduction ? 'https://mern-todo-o78t.onrender.com' : 'http://localhost:5001';
 axios.defaults.withCredentials = false;
 axios.defaults.timeout = 30000;
 
