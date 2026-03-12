@@ -7,6 +7,10 @@ axios.defaults.baseURL = import.meta.env.VITE_API_URL || (isProduction ? 'https:
 axios.defaults.withCredentials = false;
 axios.defaults.timeout = 30000;
 
+// Debug logging
+console.log('🔧 Environment:', { isProduction, hostname: window.location.hostname });
+console.log('🌐 Base URL:', axios.defaults.baseURL);
+
 function App() {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
@@ -28,24 +32,22 @@ function App() {
 
   // Fetch todos with error handling
   const fetchTodos = useCallback(async () => {
-    if (!isOnline) {
-      setError("You're offline. Please check your connection.");
-      return;
-    }
     setLoading(true);
     setError("");
     try {
-      const res = await axios.get("/api/todos");
+      const url = "/api/todos";
+      console.log('📡 Fetching from:', axios.defaults.baseURL + url);
+      const res = await axios.get(url);
+      console.log('✅ Fetch success:', res.data);
       setTodos(Array.isArray(res.data.data) ? res.data.data : []);
     } catch (err) {
-      console.error("Fetch error:", err);
-      const errorMessage = err.response?.data?.message || err.message;
-      setError(`Failed to fetch todos: ${errorMessage}`);
-      setTodos([]);
+      console.error("❌ Fetch error:", err);
+      console.log('❌ Request URL:', err.config?.baseURL + err.config?.url);
+      setError(err.response?.data?.message || "Failed to fetch todos");
     } finally {
       setLoading(false);
     }
-  }, [isOnline]);
+  }, []);
 
   useEffect(() => {
     fetchTodos();
