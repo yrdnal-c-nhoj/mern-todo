@@ -19,6 +19,7 @@ app.use((req, res, next) => {
   const origin = req.headers.origin;
   const allowedOrigins = [
     'http://localhost:5173',
+    'http://localhost:3000',
     'https://mern-todo-gules.vercel.app',
     'https://mern-todo-git-main-johns-projects-75897040.vercel.app',
     'https://mern-todo-mzvawp5in-johns-projects-75897040.vercel.app',
@@ -28,7 +29,8 @@ app.use((req, res, next) => {
   ];
   
   if (process.env.NODE_ENV === 'production') {
-    res.header('Access-Control-Allow-Origin', allowedOrigins.includes(origin) ? origin : 'https://mern-todo-gules.vercel.app');
+    // Allow any origin in production, or you can specify your frontend URL
+    res.header('Access-Control-Allow-Origin', origin || '*');
   } else {
     res.header('Access-Control-Allow-Origin', '*');
   }
