@@ -4,7 +4,7 @@ import axios from "axios";
 // Configure axios defaults
 axios.defaults.baseURL =
   import.meta.env.VITE_API_URL ||
-  (import.meta.env.PROD ? 'https://nasapod-1.onrender.com' : 'http://localhost:5001');
+  (import.meta.env.PROD ? 'https://your-backend-url.onrender.com' : 'http://localhost:5001');
 axios.defaults.withCredentials = false;
 axios.defaults.timeout = 10000;
 
@@ -204,8 +204,8 @@ function App() {
                     key={todo._id}
                     className={`group flex items-center justify-between px-4 py-3.5 rounded-xl border transition-all duration-200
                       ${todo.completed
-                        ? 'bg-green-50/60 border-green-100'
-                        : 'bg-slate-50 hover:bg-slate-100 border-slate-200 hover:border-slate-300'}`}
+                        ? 'bg-green-50/60 border-green-100 border'
+                        : 'bg-slate-50 hover:bg-slate-100 border-slate-200 border hover:border-slate-300'}`}
                   >
                     <p
                       className={`flex-1 mr-4 font-medium break-words text-label ${
