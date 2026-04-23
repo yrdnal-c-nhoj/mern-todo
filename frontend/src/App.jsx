@@ -1,15 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
-// Configure axios defaults - force correct production URL
-const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-axios.defaults.baseURL = isProduction ? 'https://mern-todo-o78t.onrender.com' : 'http://localhost:5001';
-axios.defaults.withCredentials = false;
+/**
+ * Axios Global Configuration
+ * Uses environment variables for API URL routing
+ */
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 axios.defaults.timeout = 30000;
-
-// Debug logging
-console.log('🔧 Environment:', { isProduction, hostname: window.location.hostname });
-console.log('🌐 Base URL:', axios.defaults.baseURL);
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -18,134 +15,97 @@ function App() {
   const [error, setError] = useState("");
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
-  // Network status monitoring
+  // --- Lifecycle & Network Monitoring ---
+
   useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    const updateStatus = () => setIsOnline(navigator.onLine);
+    window.addEventListener('online', updateStatus);
+    window.addEventListener('offline', updateStatus);
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('online', updateStatus);
+      window.removeEventListener('offline', updateStatus);
     };
   }, []);
 
-  // Fetch todos with error handling
   const fetchTodos = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
-      const url = "/api/todos";
-      console.log('📡 Fetching from:', axios.defaults.baseURL + url);
-      const res = await axios.get(url);
-      console.log('✅ Fetch success:', res.data);
-      setTodos(Array.isArray(res.data.data) ? res.data.data : []);
+      const { data } = await axios.get("/api/todos");
+      setTodos(Array.isArray(data.data) ? data.data : []);
     } catch (err) {
-      console.error("❌ Fetch error:", err);
-      console.log('❌ Request URL:', err.config?.baseURL + err.config?.url);
-      setError(err.response?.data?.message || "Failed to fetch todos");
+      setError(err.response?.data?.message || "Unable to connect to the server.");
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => {
-    fetchTodos();
-  }, [fetchTodos]);
+  useEffect(() => { fetchTodos(); }, [fetchTodos]);
 
-  // Add todo with validation
+  // --- Event Handlers ---
+
   const handleAdd = async () => {
-    const trimmedTodo = newTodo.trim();
-    if (!trimmedTodo) {
-      setError("Please enter a todo item");
-      return;
-    }
-    if (trimmedTodo.length > 200) {
-      setError("Todo must be less than 200 characters");
-      return;
-    }
+    const text = newTodo.trim();
+    if (!text) return setError("Please enter a task.");
+    if (text.length > 200) return setError("Task is too long (max 200 chars).");
     if (!isOnline) {
       setError("You're offline. Todo will be added when you're back online.");
       return;
     }
 
-    const tempId = Date.now();
-    const newTodoObj = { _id: tempId, text: trimmedTodo, completed: false };
+    const tempId = Date.now().toString();
+    const optimisticTodo = { _id: tempId, text, completed: false };
 
-    // Optimistic update
-    setTodos((prev) => [...prev, newTodoObj]);
+    setTodos(prev => [...prev, optimisticTodo]);
     setNewTodo("");
     setError("");
 
     try {
-      const res = await axios.post("/api/todos", { text: trimmedTodo });
-      setTodos((prev) =>
-        prev.map((todo) => (todo._id === tempId ? res.data.data : todo))
-      );
+      const { data } = await axios.post("/api/todos", { text });
+      setTodos(prev => prev.map(t => (t._id === tempId ? data.data : t)));
     } catch (err) {
-      console.error(err);
-      const errorMessage = err.response?.data?.message || err.message;
-      setError(`Failed to add todo: ${errorMessage}`);
-      // Rollback
-      setTodos((prev) => prev.filter((todo) => todo._id !== tempId));
+      setError(`Failed to save: ${err.response?.data?.message || err.message}`);
+      setTodos(prev => prev.filter(t => t._id !== tempId));
     }
   };
 
-  // Delete todo with confirmation
   const handleDelete = async (id) => {
-    if (!isOnline) {
-      setError("You're offline. Deletion will sync when online.");
-      return;
-    }
+    if (!isOnline) return setError("Connectivity required to delete tasks.");
 
-    const originalTodos = [...todos];
-    // Optimistic update
-    setTodos((prev) => prev.filter((todo) => todo._id !== id));
+    const snapshot = [...todos];
+    setTodos(prev => prev.filter(t => t._id !== id));
     setError("");
 
     try {
       await axios.delete(`/api/todos/${id}`);
     } catch (err) {
-      console.error(err);
-      const errorMessage = err.response?.data?.message || err.message;
-      setError(`Failed to delete todo: ${errorMessage}`);
-      // Rollback
-      setTodos(originalTodos);
+      setError(`Failed to delete: ${err.response?.data?.message || err.message}`);
+      setTodos(snapshot);
     }
   };
-
-  const clearError = () => setError("");
 
   return (
     <div className="page-container gradient-bg">
       <div className="content-container">
-        <div className="mx-auto w-full max-w-lg card">
-          {/* Header */}
-          <div className="card-header">
-            <h1 className="text-display text-slate-800 text-3xl sm:text-4xl text-center">
+        <main className="w-full max-w-lg mx-auto shadow-xl card">
+          <header className="border-b card-header border-slate-100">
+            <h1 className="text-3xl text-center text-display text-slate-800 sm:text-4xl">
               John's Todo List
             </h1>
-            <div className="flex justify-center items-center gap-2.5 mt-3 text-sm">
+            <div className="flex items-center justify-center gap-2 mt-3">
               <div
                 className={`w-3 h-3 rounded-full ring-2 ring-offset-2 transition-all duration-300 ${
-                  isOnline
-                    ? 'bg-green-500 ring-green-200 animate-pulse'
-                    : 'bg-red-500 ring-red-200'
+                  isOnline ? 'bg-green-500 ring-green-100 animate-pulse' : 'bg-red-500 ring-red-100'
                 }`}
               />
-              <span
-                className={`font-medium text-label ${
-                  isOnline ? 'text-green-700' : 'text-red-700'
-                }`}
-              >
+              <span className={`text-xs font-bold uppercase tracking-wider ${isOnline ? 'text-green-600' : 'text-red-600'}`}>
                 {isOnline ? 'Connected' : 'Offline'}
               </span>
             </div>
-          </div>
+          </header>
 
-          {/* Input + Button */}
-          <div className="p-6 border-slate-100 border-b">
-            <div className="flex sm:flex-row flex-col gap-3">
+          <section className="p-6 bg-white border-b border-slate-50">
+            <div className="flex flex-col gap-3 sm:flex-row">
               <input
                 type="text"
                 value={newTodo}
@@ -154,85 +114,61 @@ function App() {
                 placeholder="What needs to be done?"
                 maxLength={200}
                 disabled={!isOnline || loading}
-                className="flex-1 bg-slate-50 disabled:opacity-60 shadow-sm px-4 py-3 border border-slate-200 focus:border-indigo-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-800 transition-all placeholder-slate-400"
+                className="flex-1 px-4 py-3 transition-all border outline-none bg-slate-50 border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 disabled:opacity-50"
               />
               <button
                 onClick={handleAdd}
                 disabled={!isOnline || loading || !newTodo.trim()}
-                className="flex justify-center items-center gap-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-50 shadow-md hover:shadow-lg px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:ring-offset-2 min-w-[100px] font-medium text-white text-xs transition-all duration-200 disabled:cursor-not-allowed"
+                className="px-6 py-3 font-bold text-white transition-all bg-indigo-600 shadow-sm hover:bg-indigo-700 rounded-xl active:scale-95 disabled:bg-slate-300 disabled:cursor-not-allowed"
               >
-                {loading ? (
-                  <span className="animate-pulse">ADDING…</span>
-                ) : (
-                  "ADD TASK"
-                )}
+                {loading ? '...' : 'ADD'}
               </button>
             </div>
-          </div>
 
-          {/* Messages */}
-          {loading && (
-            <div className="flex justify-center items-center gap-2 mx-6 mt-4 p-4 alert-info">
-              <span className="loading-spinner" />
-              <span>Loading tasks...</span>
-            </div>
-          )}
+            {error && (
+              <div className="flex items-center justify-between p-3 mt-4 text-sm alert-error">
+                <span>{error}</span>
+                <button onClick={() => setError("")} className="font-bold hover:opacity-70">×</button>
+              </div>
+            )}
+          </section>
 
-          {error && (
-            <div className="flex justify-between items-center mx-6 mt-4 p-4 alert-error">
-              <span>{error}</span>
-              <button
-                onClick={clearError}
-                className="px-2 font-bold text-red-500 hover:text-red-700 text-xl leading-none"
-              >
-                ×
-              </button>
-            </div>
-          )}
-
-          {/* Todo List */}
-          <div className="card-body">
+          <section className="bg-white card-body">
             {todos.length === 0 && !loading ? (
-              <div className="py-12 text-slate-400 text-center">
-                <div className="opacity-70 mb-4 text-6xl">📋</div>
-                <p className="font-medium text-display text-lg">Your list is empty</p>
-                <p className="mt-1 text-label text-sm">Add a task above to get started</p>
+              <div className="py-16 text-center text-slate-400 opacity-60">
+                <div className="mb-4 text-6xl opacity-70">📋</div>
+                <p className="text-lg font-medium text-display">Your list is empty</p>
+                <p className="text-sm">Time to add some goals!</p>
               </div>
             ) : (
-              <div className="space-y-3">
+              <ul className="space-y-3">
                 {todos.map((todo) => (
-                  <div
+                  <li
                     key={todo._id}
-                    className={`group flex items-center justify-between px-4 py-3.5 rounded-xl border transition-all duration-200
-                      ${todo.completed
-                        ? 'bg-green-50/60 border-green-100 border'
-                        : 'bg-slate-50 hover:bg-slate-100 border-slate-200 border hover:border-slate-300'}`}
+                    className="flex items-center justify-between p-4 transition-all border group bg-slate-50 border-slate-100 rounded-xl hover:border-indigo-200"
                   >
-                    <p
-                      className={`flex-1 mr-4 font-medium break-words text-label ${
-                        todo.completed ? 'line-through text-slate-500' : 'text-slate-800'
-                      }`}
-                    >
+                    <span className="flex-1 mr-4 font-medium break-words text-slate-700">
                       {todo.text}
-                    </p>
+                    </span>
                     <button
                       onClick={() => handleDelete(todo._id)}
                       disabled={!isOnline}
-                      className="btn btn-danger"
+                      className="btn-danger px-3 py-1.5 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
                     >
-                      DELETE
+                      REMOVE
                     </button>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
-          </div>
+          </section>
 
-          {/* Footer */}
-          <div className="bg-slate-50/70 px-6 py-5 border-slate-100 border-t text-label text-slate-500 text-xs text-center">
-            {todos.length} {todos.length === 1 ? 'task' : 'tasks'} • John's MERN To-Do App
-          </div>
-        </div>
+          <footer className="px-6 py-4 text-center border-t bg-slate-50/50 border-slate-100">
+            <p className="text-xs font-bold tracking-widest uppercase text-slate-400">
+              {todos.length} {todos.length === 1 ? 'Task' : 'Tasks'} Remaining
+            </p>
+          </footer>
+        </main>
       </div>
     </div>
   );
