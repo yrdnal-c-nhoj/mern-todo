@@ -1,5 +1,6 @@
+const path = require('path');
 if (process.env.NODE_ENV !== 'production') {
-  require("dotenv").config();
+  require("dotenv").config({ path: path.join(__dirname, '.env') });
 }
 
 const express = require("express");
@@ -9,6 +10,12 @@ const mongoSanitize = require('express-mongo-sanitize');
 const { securityHeaders, xssProtection, globalLimiter } = require("./middleware/security");
 
 const app = express();
+
+// Immediate check for critical environment variables
+if (!process.env.MONGO_URI && process.env.NODE_ENV === 'production') {
+  console.error('❌ CRITICAL: MONGO_URI is not defined in production environment');
+  process.exit(1);
+}
 
 // Standardized CORS configuration
 const allowedOrigins = [
@@ -38,7 +45,16 @@ app.use(securityHeaders);
 app.use(globalLimiter);
 
 app.use(express.json({ limit: '10kb' })); // Limit body size
-app.use(mongoSanitize()); // Prevent NoSQL injection
+
+// Prevent NoSQL injection by manually sanitizing request data
+// This avoids the "TypeError: Cannot set property query" error caused by reassigning the query getter
+app.use((req, res, next) => {
+  mongoSanitize.sanitize(req.body);
+  mongoSanitize.sanitize(req.params);
+  mongoSanitize.sanitize(req.query);
+  next();
+});
+
 app.use(xssProtection); // Sanitize inputs (must follow express.json)
 
 app.use("/api/todos", require("./routes/todoRoutes"));
@@ -50,8 +66,10 @@ app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.get("/health", (req, res) => {
   res.json({ 
     status: "Server is running", 
+    database: mongoose.connection.readyState === 1 ? "Connected" : "Disconnected",
     env: process.env.NODE_ENV,
     timestamp: new Date().toISOString(),
+    mongoUriSet: !!process.env.MONGO_URI,
     uptime: process.uptime()
   });
 });
@@ -109,8 +127,6 @@ app.use((err, req, res, next) => {
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
