@@ -20,9 +20,13 @@ const securityHeaders = helmet({
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
       scriptSrc: ["'self'"],
-      connectSrc: ["'self'", "http://localhost:5173", "http://localhost:3000", "https://mern-todo-gules.vercel.app", "https://nasapod-1.onrender.com", "https://mern-todo-johns-projects-75897040.vercel.app", "https://*.vercel.app"],
+      connectSrc: ["'self'", "https://nasapod-1.onrender.com", "https://*.vercel.app", "http://localhost:*"],
     },
   },
+  // Explicitly disable the reporting header that causes JSON.parse errors in some browsers
+  reportingEndpoints: false,
+  // Ensure cross-origin resources (like the API) can be fetched
+  crossOriginResourcePolicy: { policy: "cross-origin" },
   hsts: {
     maxAge: 31536000,
     includeSubDomains: true,

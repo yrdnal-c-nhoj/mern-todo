@@ -5,8 +5,17 @@ import axios from "axios";
  * Axios Global Configuration
  * Uses environment variables for API URL routing
  */
-axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+axios.defaults.baseURL = API_URL;
 axios.defaults.timeout = 30000;
+
+// Log the API URL in production to debug "NetworkError" issues
+if (import.meta.env.PROD) {
+  console.log(`🚀 API Base URL: ${API_URL}`);
+  if (API_URL.includes('localhost')) {
+    console.warn("⚠️ Warning: Frontend is in production but pointing to localhost! Check Vercel Env Vars.");
+  }
+}
 
 function App() {
   const [todos, setTodos] = useState([]);
