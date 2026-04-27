@@ -6,7 +6,7 @@ const validateTodo = [
     .isLength({ min: 1, max: 200 })
     .withMessage('Todo text must be between 1 and 200 characters')
     .escape()
-    .matches(/^[a-zA-Z0-9\s\-_.,!?@#$%^&*()]+$/)
+    .matches(/^[a-zA-Z0-9\s\-_.,!?@#$%^&*()/'"]+$/)
     .withMessage('Todo text contains invalid characters'),
   
   (req, res, next) => {

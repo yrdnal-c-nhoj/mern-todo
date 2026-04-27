@@ -43,6 +43,9 @@ app.use(xssProtection); // Sanitize inputs (must follow express.json)
 
 app.use("/api/todos", require("./routes/todoRoutes"));
 
+// Handle favicon requests to prevent 404 JSON noise in browser logs
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.json({ 
