@@ -23,10 +23,12 @@ const securityHeaders = helmet({
       connectSrc: [
         "'self'", 
         "https://mern-todo-b3fe.onrender.com", 
-        "https://*.vercel.app", 
-        "http://localhost:*", 
+        "https://*.vercel.app",
+        "https://vercel.com",
+        "http://localhost:*",
         "https://*.onrender.com",
-        "https://*.render.com"
+        "https://*.render.com",
+        "https://*.mongodb.net"
       ],
     },
   },

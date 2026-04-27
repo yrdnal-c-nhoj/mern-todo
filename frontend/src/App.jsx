@@ -43,6 +43,7 @@ function App() {
       const { data } = await axios.get("/api/todos");
       setTodos(Array.isArray(data.data) ? data.data : []);
     } catch (err) {
+      console.error("🔥 Fetch Error:", err);
       if (err.code === 'ECONNABORTED') {
         setError("Server is taking too long to wake up. Please refresh in a minute.");
       } else if (!err.response) {
