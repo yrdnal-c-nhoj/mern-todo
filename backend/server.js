@@ -14,37 +14,26 @@ app.use(securityHeaders);
 app.use(xssProtection);
 app.use(globalLimiter);
 
-// CORS configuration
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  const allowedOrigins = [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'https://mern-todo-gules.vercel.app',
-    'https://mern-todo-git-main-johns-projects-75897040.vercel.app',
-    'https://mern-todo-mzvawp5in-johns-projects-75897040.vercel.app',
-    'https://mern-todo-mkjxtubqo-johns-projects-75897040.vercel.app',
-    'https://mern-todo-498zk07yp-johns-projects-75897040.vercel.app',
-    'https://mern-todo-dwu9phmgq-johns-projects-75897040.vercel.app'
-  ];
-  
-  if (process.env.NODE_ENV === 'production') {
-    // Allow any origin in production, or you can specify your frontend URL
-    res.header('Access-Control-Allow-Origin', origin || '*');
-  } else {
-    res.header('Access-Control-Allow-Origin', '*');
-  }
-  
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'false');
-  
-  if (req.method === 'OPTIONS') {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
-});
+// Standardized CORS configuration
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://mern-todo-gules.vercel.app',
+  'https://mern-todo-git-main-johns-projects-75897040.vercel.app'
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: false
+}));
 
 app.use(express.json({ limit: '10kb' })); // Limit body size
 app.use("/api/todos", require("./routes/todoRoutes"));
