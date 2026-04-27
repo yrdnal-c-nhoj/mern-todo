@@ -19,7 +19,8 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   'https://mern-todo-gules.vercel.app',
-  'https://mern-todo-git-main-johns-projects-75897040.vercel.app'
+  'https://mern-todo-git-main-johns-projects-75897040.vercel.app',
+  'https://mern-todo-johns-projects-75897040.vercel.app' // Added general Vercel domain
 ];
 
 app.use(cors({

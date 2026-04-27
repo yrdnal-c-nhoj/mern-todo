@@ -20,7 +20,14 @@ const securityHeaders = helmet({
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
       scriptSrc: ["'self'"],
-      connectSrc: ["'self'", "http://localhost:5173", "http://localhost:3000", "https://mern-todo-gules.vercel.app", "https://nasapod-1.onrender.com"],
+      connectSrc: [
+        "'self'", 
+        "http://localhost:5173", 
+        "http://localhost:3000", 
+        "https://mern-todo-gules.vercel.app", 
+        "https://nasapod-1.onrender.com",
+        "https://mern-todo-johns-projects-75897040.vercel.app"
+      ],
     },
   },
   hsts: {
