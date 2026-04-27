@@ -7,7 +7,7 @@ import axios from "axios";
  */
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 axios.defaults.baseURL = API_URL;
-axios.defaults.timeout = 30000;
+axios.defaults.timeout = 60000; // Increased to 60s for Render Free Tier cold starts
 
 // Log the API URL in production to debug "NetworkError" issues
 if (import.meta.env.PROD) {
@@ -43,7 +43,13 @@ function App() {
       const { data } = await axios.get("/api/todos");
       setTodos(Array.isArray(data.data) ? data.data : []);
     } catch (err) {
-      setError(err.response?.data?.message || "Unable to connect to the server.");
+      if (err.code === 'ECONNABORTED') {
+        setError("Server is taking too long to wake up. Please refresh in a minute.");
+      } else if (!err.response) {
+        setError("Network Error: Check CORS settings or Server status.");
+      } else {
+        setError(err.response?.data?.message || "An unexpected error occurred.");
+      }
     } finally {
       setLoading(false);
     }

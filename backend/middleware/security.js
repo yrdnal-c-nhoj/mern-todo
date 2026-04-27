@@ -20,7 +20,14 @@ const securityHeaders = helmet({
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
       scriptSrc: ["'self'"],
-      connectSrc: ["'self'", "https://mern-todo-b3fe.onrender.com", "https://*.vercel.app", "http://localhost:*", "https://*.onrender.com"],
+      connectSrc: [
+        "'self'", 
+        "https://mern-todo-b3fe.onrender.com", 
+        "https://*.vercel.app", 
+        "http://localhost:*", 
+        "https://*.onrender.com",
+        "https://*.render.com"
+      ],
     },
   },
   // Prevent browser-level JSON.parse errors on reporting headers
