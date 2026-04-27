@@ -149,7 +149,7 @@ const connectDB = async () => {
 const startServer = async () => {
   await connectDB();
   
-  const port = process.env.PORT || 10000;
+  const port = process.env.PORT || 5001;
   app.listen(port, () => {
     console.log("🚀 Server running successfully");
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
