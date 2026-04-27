@@ -9,11 +9,6 @@ const { securityHeaders, xssProtection, globalLimiter } = require("./middleware/
 
 const app = express();
 
-// Security middleware
-app.use(securityHeaders);
-app.use(xssProtection);
-app.use(globalLimiter);
-
 // Standardized CORS configuration
 const allowedOrigins = [
   'http://localhost:5173',
@@ -36,6 +31,11 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: false
 }));
+
+// Security middleware - Moved after CORS to ensure preflights are handled correctly
+app.use(securityHeaders);
+app.use(xssProtection);
+app.use(globalLimiter);
 
 app.use(express.json({ limit: '10kb' })); // Limit body size
 app.use("/api/todos", require("./routes/todoRoutes"));
