@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const mongoSanitize = require('express-mongo-sanitize');
 const { securityHeaders, xssProtection, globalLimiter } = require("./middleware/security");
 
 const app = express();
@@ -34,10 +35,12 @@ app.use(cors({
 
 // Security middleware - Moved after CORS to ensure preflights are handled correctly
 app.use(securityHeaders);
-app.use(xssProtection);
 app.use(globalLimiter);
 
 app.use(express.json({ limit: '10kb' })); // Limit body size
+app.use(mongoSanitize()); // Prevent NoSQL injection
+app.use(xssProtection); // Sanitize inputs (must follow express.json)
+
 app.use("/api/todos", require("./routes/todoRoutes"));
 
 // Health check endpoint

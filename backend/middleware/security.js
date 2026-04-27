@@ -20,7 +20,7 @@ const securityHeaders = helmet({
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
       scriptSrc: ["'self'"],
-      connectSrc: ["'self'", "https://nasapod-1.onrender.com", "https://*.vercel.app", "http://localhost:*", "https://*.render.com"],
+      connectSrc: ["'self'", "https://nasapod-1.onrender.com", "https://*.vercel.app", "http://localhost:*", "https://*.onrender.com"],
     },
   },
   // Prevent browser-level JSON.parse errors on reporting headers
