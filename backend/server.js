@@ -20,12 +20,13 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://mern-todo-gules.vercel.app',
   'https://mern-todo-git-main-johns-projects-75897040.vercel.app',
-  'https://mern-todo-johns-projects-75897040.vercel.app' // Added general Vercel domain
+  'https://mern-todo-johns-projects-75897040.vercel.app'
 ];
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+    // Allow if in whitelist, if it's a vercel preview, or if in development
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app') || process.env.NODE_ENV !== 'production') {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
