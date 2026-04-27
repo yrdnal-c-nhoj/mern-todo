@@ -135,19 +135,24 @@ const connectDB = async () => {
     
     console.log("✅ Database connected successfully");
     console.log(`📊 Database: ${conn.connection.name}`);
-    
-    return conn;
   } catch (error) {
     console.error("❌ Database connection failed:", error.message);
-    
-    // Retry connection after 5 seconds
-    setTimeout(connectDB, 5000);
+    // In production, we want to know if the connection failed immediately
+    if (process.env.NODE_ENV === 'production') {
+      throw error;
+    }
+    // In development, retry
+    setTimeout(() => connectDB().catch(() => {}), 5000);
   }
 };
 
 // Start server
 const startServer = async () => {
-  await connectDB();
+  try {
+    await connectDB();
+  } catch (err) {
+    console.error("Failed to establish initial DB connection. Starting server anyway...");
+  }
   
   const port = process.env.PORT || 5001;
   app.listen(port, () => {

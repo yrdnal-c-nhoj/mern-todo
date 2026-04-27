@@ -32,9 +32,11 @@ const securityHeaders = helmet({
       ],
     },
   },
-  // Prevent browser-level JSON.parse errors on reporting headers
-  reportingEndpoints: false,
+  // Disable reporting endpoints and cross-origin policies that often cause 
+  // ORB/CORB "nosniff" blocks in strict browsers like Firefox/Safari
+  reportingEndpoints: false, 
   crossOriginEmbedderPolicy: false,
+  crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
   // Ensure cross-origin resources (like the API) can be fetched
   crossOriginResourcePolicy: { policy: "cross-origin" },
   hsts: {
