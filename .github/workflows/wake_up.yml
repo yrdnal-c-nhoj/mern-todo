@@ -7,4 +7,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Curl Render URL
-        run: curl -s https://mern-todo-o78t.onrender.com > /dev/null
+        run: curl -f -s https://mern-todo-o78t.onrender.com/health

@@ -23,13 +23,16 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://mern-todo-gules.vercel.app',
   'https://mern-todo-git-main-johns-projects-75897040.vercel.app',
-  'https://mern-todo-johns-projects-75897040.vercel.app'
+  'https://mern-todo-johns-projects-75897040.vercel.app',
+  'https://mern-todo-oekjke1bq-johns-projects-75897040.vercel.app'
 ];
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow if in whitelist, if it's a vercel preview, or if in development
-    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app') || process.env.NODE_ENV !== 'production') {
+    // Allow if in whitelist, if it matches a Vercel deployment pattern, or if in development
+    const isVercelOrigin = origin && (origin.endsWith('.vercel.app') || origin.includes('vercel.app'));
+    
+    if (!origin || allowedOrigins.includes(origin) || isVercelOrigin || process.env.NODE_ENV !== 'production') {
       callback(null, true);
     } else {
       console.warn(`🚫 CORS Blocked: ${origin}`);
