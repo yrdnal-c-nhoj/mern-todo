@@ -22,7 +22,7 @@ const securityHeaders = helmet({
       scriptSrc: ["'self'"],
       connectSrc: [
         "'self'", 
-        "https://mern-todo-b3fe.onrender.com", 
+        "https://mern-todo-o78t.onrender.com", 
         "https://*.vercel.app",
         "https://vercel.com",
         "http://localhost:*",
