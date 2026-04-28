@@ -2,9 +2,14 @@ name: Wake Up Render
 on:
   schedule:
     - cron: '*/10 * * * *' # Runs every 10 minutes
+  workflow_dispatch:      # Allows you to run this manually from the Actions tab
+  push:                   # Trigger a run when you push to main to verify it's working
+    branches: [ main ]
+
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
       - name: Curl Render URL
-        run: curl -f -s https://mern-todo-o78t.onrender.com/health
+        # Added -i to see headers and -v for more verbose output if it fails
+        run: curl -f -s -i https://mern-todo-o78t.onrender.com/health

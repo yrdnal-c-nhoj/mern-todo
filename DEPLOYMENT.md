@@ -10,14 +10,14 @@
    - Set environment variables:
      - `MONGO_URI`: Your MongoDB connection string
      - `NODE_ENV`: production
-     - `PORT`: (varies by host, often 8080 or 3000)
+     - `PORT`: 10000
 
 2. **Environment Variables:**
 
 ```bash
 MONGO_URI=mongodb+srv://your-connection-string
 NODE_ENV=production
-PORT=8080
+PORT=10000
 ```
 
 ## Frontend (Alternative Static Hosting)
